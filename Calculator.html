@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>حاسبة أرباح COD - الخليج</title>
+  <style>
+    /* ── Minimal utility CSS (replaces Tailwind CDN ~3MB → ~5KB) ── */
+    *,*::before,*::after{box-sizing:border-box}
+    .flex{display:flex}.grid{display:grid}
+    .flex-col{flex-direction:column}.flex-1{flex:1 1 0%}.flex-wrap{flex-wrap:wrap}.flex-shrink-0{flex-shrink:0}
+    .items-center{align-items:center}.items-end{align-items:flex-end}
+    .justify-center{justify-content:center}.justify-between{justify-content:space-between}
+    .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .gap-2{gap:.5rem}.gap-2\.5{gap:.625rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}
+    .relative{position:relative}.fixed{position:fixed}.z-10{z-index:10}
+    .overflow-hidden{overflow:hidden}.pointer-events-none{pointer-events:none}
+    .w-full{width:100%}.max-w-5xl{max-width:64rem}.mx-auto{margin-left:auto;margin-right:auto}
+    .w-1\.5{width:.375rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-7{width:1.75rem}.w-8{width:2rem}.w-10{width:2.5rem}
+    .h-2{height:.5rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-7{height:1.75rem}.h-8{height:2rem}.h-10{height:2.5rem}
+    .min-h-screen{min-height:100vh}
+    .p-3{padding:.75rem}.p-5{padding:1.25rem}
+    .px-2\.5{padding-left:.625rem;padding-right:.625rem}
+    .px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}
+    .py-1{padding-top:.25rem;padding-bottom:.25rem}
+    .py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-8{padding-top:2rem;padding-bottom:2rem}
+    .pb-4{padding-bottom:1rem}
+    .\!py-2{padding-top:.5rem!important;padding-bottom:.5rem!important}
+    .\!px-3{padding-left:.75rem!important;padding-right:.75rem!important}
+    .mb-0\.5{margin-bottom:.125rem}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}
+    .mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-7{margin-bottom:1.75rem}
+    .mt-0\.5{margin-top:.125rem}.mt-1\.5{margin-top:.375rem}.mt-2{margin-top:.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}
+    .text-\[10px\]{font-size:10px}
+    .text-xs{font-size:.75rem;line-height:1rem}.text-sm{font-size:.875rem;line-height:1.25rem}
+    .text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}
+    .text-xl{font-size:1.25rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}
+    .text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}
+    .font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}.font-black{font-weight:900}
+    .text-center{text-align:center}.text-right{text-align:right}
+    .uppercase{text-transform:uppercase}.tracking-wide{letter-spacing:.025em}.tracking-widest{letter-spacing:.1em}
+    .tracking-tight{letter-spacing:-.025em}.whitespace-nowrap{white-space:nowrap}
+    .text-white{color:#fff}.text-white\/25{color:rgba(255,255,255,.25)}
+    .text-slate-200{color:#e2e8f0}.text-slate-400{color:#94a3b8}.text-slate-500{color:#64748b}.text-slate-600{color:#475569}.text-slate-700{color:#334155}
+    .text-blue-300{color:#93c5fd}.text-blue-300\/60{color:rgba(147,197,253,.6)}.text-blue-300\/80{color:rgba(147,197,253,.8)}
+    .text-blue-400{color:#60a5fa}.text-blue-500{color:#3b82f6}.text-blue-600{color:#2563eb}.text-blue-700{color:#1d4ed8}
+    .text-emerald-400{color:#34d399}.text-emerald-500{color:#10b981}.text-emerald-600{color:#059669}
+    .text-green-500{color:#22c55e}.text-green-600{color:#16a34a}.text-green-700{color:#15803d}.text-green-800{color:#166534}
+    .text-red-300{color:#fca5a5}.text-red-500{color:#ef4444}.text-red-700{color:#b91c1c}
+    .text-orange-500{color:#f97316}.text-orange-600{color:#ea580c}
+    .bg-blue-50{background-color:#eff6ff}.bg-blue-100{background-color:#dbeafe}.bg-blue-600{background-color:#2563eb}
+    .bg-slate-100{background-color:#f1f5f9}.bg-green-50{background-color:#f0fdf4}
+    .bg-green-500{background-color:#22c55e}.bg-red-50{background-color:#fef2f2}.bg-orange-100{background-color:#ffedd5}
+    .bg-white\/10{background-color:rgba(255,255,255,.1)}.bg-white\/15{background-color:rgba(255,255,255,.15)}
+    .bg-gradient-to-br{background-image:linear-gradient(to bottom right,var(--tw-gf,transparent),var(--tw-gt,transparent))}
+    .bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gf,transparent),var(--tw-gt,transparent))}
+    .from-blue-600{--tw-gf:#2563eb}.to-blue-700{--tw-gt:#1d4ed8}
+    .from-emerald-50{--tw-gf:#ecfdf5}.to-emerald-100{--tw-gt:#d1fae5}
+    .from-blue-50{--tw-gf:#eff6ff}.to-blue-100{--tw-gt:#dbeafe}
+    .from-emerald-400{--tw-gf:#34d399}.to-blue-500{--tw-gt:#3b82f6}
+    .border{border-width:1px;border-style:solid}.border-2{border-width:2px;border-style:solid}.border-dashed{border-style:dashed}
+    .border-white\/20{border-color:rgba(255,255,255,.2)}
+    .border-blue-100{border-color:#dbeafe}.border-blue-200{border-color:#bfdbfe}
+    .border-emerald-200{border-color:#a7f3d0}.border-green-300{border-color:#86efac}.border-red-300{border-color:#fca5a5}
+    .rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.rounded-2xl{border-radius:1rem}
+    .shadow-lg{box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05)}
+    .transition{transition:color 150ms,background-color 150ms,border-color 150ms,box-shadow 150ms,opacity 150ms,transform 150ms}
+    .rotate-180{transform:rotate(180deg)}
+    .backdrop-blur-sm{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+    .hover\:bg-white\/15:hover{background-color:rgba(255,255,255,.15)}
+    @media(min-width:1024px){
+      .lg\:flex-row{flex-direction:row}
+      .lg\:w-\[58\%\]{width:58%}
+      .lg\:w-\[42\%\]{width:42%}
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { font-family: 'Cairo', sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #0A1628 0%, #0D2348 40%, #1a3a6b 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Decorative background blobs */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -120px; left: -120px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -100px; right: -100px;
+      width: 450px; height: 450px;
+      background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.1) inset;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .result-card-sm {
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.28);
+      border: 1px solid rgba(59,130,246,0.12);
+    }
+
+    .unit-profit-card {
+      background: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 60%, #2563EB 100%);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 12px 40px rgba(37,99,235,0.45);
+      border: 1px solid rgba(96,165,250,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .unit-profit-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; left: -40px;
+      width: 160px; height: 160px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .unit-profit-card::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; right: 20px;
+      width: 120px; height: 120px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 15px 28px;
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+      letter-spacing: 0.5px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(37,99,235,0.55);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: white;
+      border: none;
+      border-radius: 11px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.35);
+      white-space: nowrap;
+    }
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37,99,235,0.5);
+    }
+
+    .section-number {
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: white;
+      border-radius: 50%;
+      width: 28px; height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(37,99,235,0.4);
+    }
+
+    .input-wrapper {
+      background: #EFF6FF;
+      border-radius: 14px;
+      padding: 14px 16px 10px;
+      border: 2px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-wrapper:focus-within {
+      border-color: #93C5FD;
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+    }
+    .input-wrapper.highlight {
+      border-color: #BFDBFE;
+      background: #EFF6FF;
+    }
+
+    .input-label {
+      font-size: 11.5px;
+      color: #64748b;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .input-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .input-inner input, .input-inner select {
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 17px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      color: #1e3a8a;
+      width: 100%;
+    }
+    .input-inner input::placeholder { color: #bfdbfe; font-weight: 500; }
+
+    .icon-badge {
+      background: white;
+      border-radius: 9px;
+      width: 34px; height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.12);
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      font-size: 12.5px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .breakdown-row:hover { background: rgba(0,0,0,0.03); }
+    .breakdown-group {
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .breakdown-group-your { background: #FFF7ED; border: 1.5px solid #FED7AA; }
+    .breakdown-group-cc   { background: #EFF6FF; border: 1.5px solid #BFDBFE; }
+    .breakdown-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+    }
+    .breakdown-group-your .breakdown-group-header { border-bottom: 1.5px dashed #FED7AA; }
+    .breakdown-group-cc   .breakdown-group-header { border-bottom: 1.5px dashed #BFDBFE; }
+    .breakdown-subtotal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 10px 2px;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .hidden { display: none; }
+
+    .fade-in {
+      animation: fadeIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .range-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 5px;
+      border-radius: 3px;
+      background: #BFDBFE;
+      outline: none;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.5);
+    }
+
+    .info-pill {
+      background: rgba(37,99,235,0.08);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 8px;
+      padding: 3px 10px;
+      font-size: 11.5px;
+      color: #1D4ED8;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1.5px dashed #DBEAFE;
+      margin: 20px 0;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(37,99,235,0.3); border-radius: 3px; }
+
+    /* ── Mobile Responsive ──────────────────────────────────────────────────── */
+    @media(max-width:639px){
+      .glass-card,.result-card-sm,.unit-profit-card{padding:16px;}
+      .header-wrapper{flex-direction:column;align-items:stretch;gap:.625rem;}
+      .inputs-grid{grid-template-columns:1fr!important;}
+      .results-row{flex-direction:column;}
+      #unitProfitValue{font-size:2rem!important;}
+      .insights-inner-grid{grid-template-columns:1fr!important;}
+      .breakdown-stats-grid{grid-template-columns:1fr!important;}
+      select,input[type="number"]{font-size:16px!important;}
+    }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-4">
+
+  <!-- Header -->
+  <div class="max-w-5xl mx-auto mb-7">
+    <div class="flex items-center justify-between header-wrapper">
+      <div class="flex items-center gap-3">
+        <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-2xl px-5 py-2.5 flex items-center gap-2 text-sm font-bold shadow-lg shadow-blue-900/40">
+          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          <span data-i18n="badge"></span>محاسب الأرباح</span>
+        </div>
+        <button onclick="toggleLang()" id="langToggleBtn" class="border border-white/20 bg-white/10 text-white rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-white/15 transition backdrop-blur-sm tracking-wide">عربي</button>
+      </div>
+      <div class="text-right">
+        <h1 class="text-2xl font-black text-white" data-i18n="title">حاسبة أرباح COD</h1>
+        <p class="text-sm text-blue-300/80 font-medium mt-0.5" data-i18n="subtitle">دول الخليج العربي · COD Network</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Layout: in RTL first child = RIGHT, second child = LEFT -->
+  <div class="max-w-5xl mx-auto flex flex-col lg:flex-row gap-5">
+
+    <!-- ══ INPUT PANEL — first in DOM → appears on RIGHT in RTL (58%) ══ -->
+    <div class="lg:w-[58%]">
+      <div class="glass-card">
+
+        <!-- Section 1 -->
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-4">
+            <span class="section-number">١</span>
+            <h2 class="text-base font-bold text-slate-700" data-i18n="s1-title">تفاصيل المنتج</h2>
+          </div>
+          <div class="grid grid-cols-2 gap-3 inputs-grid">
+
+            <div class="input-wrapper">
+              <span class="input-label" data-i18n="label-product-type">نوع المنتج *</span>
+              <div class="input-inner">
+                <select id="productType" style="font-family:'Cairo',sans-serif;font-size:16px;color:#1e3a8a;font-weight:700;background:transparent;border:none;outline:none;width:100%;">
+                  <option value="cosmetic">Cosmetics</option>
+                  <option value="gadget">Gadget</option>
+                </select>
+                <div class="icon-badge">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-wrapper">
+              <span class="input-label" data-i18n="label-country">الدولة *</span>
+              <div class="input-inner">
+                <select id="country" style="font-family:'Cairo',sans-serif;font-size:16px;color:#1e3a8a;font-weight:700;background:transparent;border:none;outline:none;width:100%;">
+                  <option value="KWT">🇰🇼 الكويت - KWT</option>
+                  <option value="UAE">🇦🇪 الإمارات - UAE</option>
+                  <option value="KSA">🇸🇦 السعودية - KSA</option>
+                  <option value="QTR">🇶🇦 قطر - QTR</option>
+                  <option value="BHR">🇧🇭 البحرين - BHR</option>
+                  <option value="OMN">🇴🇲 عُمان - OMN</option>
+                </select>
+                <div class="icon-badge">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Section 2 -->
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-4">
+            <span class="section-number">٢</span>
+            <h2 class="text-base font-bold text-slate-700" data-i18n="s2-title">التكاليف والإيرادات</h2>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mb-3 inputs-grid">
+
+            <div class="input-wrapper">
+              <span class="input-label" data-i18n="label-product-cost">تكلفة المنتج *</span>
+              <div class="input-inner">
+                <input type="number" id="productCost" placeholder="0" min="0" step="0.01" />
+                <div class="icon-badge">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-wrapper">
+              <span class="input-label" data-i18n="label-order-value">متوسط قيمة الطلب *</span>
+              <div class="input-inner">
+                <input type="number" id="orderValue" placeholder="0" min="0" step="0.01" />
+                <div class="icon-badge">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="input-wrapper highlight">
+            <span class="input-label" data-i18n="label-cac">Cost Per Lead - CPL ($) *</span>
+            <div class="input-inner">
+              <input type="number" id="cac" placeholder="0" min="0" step="0.01" />
+              <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Section 3 -->
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-4">
+            <span class="section-number">٣</span>
+            <h2 class="text-base font-bold text-slate-700" data-i18n="s3-title">معدلات الأداء</h2>
+          </div>
+          <div class="grid grid-cols-2 gap-3 inputs-grid">
+
+            <div class="input-wrapper">
+              <span class="input-label" data-i18n="label-confirm">نسبة التأكيد (%) *</span>
+              <div class="input-inner">
+                <input type="number" id="confirmRate" placeholder="0" min="0" max="100" step="1" oninput="document.getElementById('confirmSlider').value=this.value" />
+                <div class="icon-badge">
+                  <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+              </div>
+              <input type="range" id="confirmSlider" class="range-slider" min="0" max="100" value="0" oninput="document.getElementById('confirmRate').value=this.value" />
+            </div>
+
+            <div class="input-wrapper">
+              <span class="input-label" data-i18n="label-deliver">نسبة التوصيل (%) *</span>
+              <div class="input-inner">
+                <input type="number" id="deliverRate" placeholder="0" min="0" max="100" step="1" oninput="document.getElementById('deliverSlider').value=this.value" />
+                <div class="icon-badge">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+                </div>
+              </div>
+              <input type="range" id="deliverSlider" class="range-slider" min="0" max="100" value="0" oninput="document.getElementById('deliverRate').value=this.value" />
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Info Pills -->
+        <div class="flex flex-wrap gap-2 mb-5 p-3 bg-blue-50 rounded-2xl border border-blue-100">
+          <span class="info-pill" id="infoLead">🏷️ طلب: $0.50</span>
+          <span class="info-pill" id="infoConfirm">✅ تأكيد: —</span>
+          <span class="info-pill" id="infoDeliver">🚚 CC توصيل: —</span>
+          <span class="info-pill" id="infoShipping">📦 شحن: —</span>
+          <span class="info-pill" data-i18n="pill-cod" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.25);color:#047857;">💳 COD: 5%</span>
+          <span class="info-pill" data-i18n="pill-storage" style="background:rgba(100,116,139,0.08);border-color:rgba(100,116,139,0.2);color:#475569;">📦 تخزين: مجاني</span>
+        </div>
+
+        <!-- Analyze Button -->
+        <button class="btn-primary" onclick="calculate()">
+          <span class="flex items-center justify-center gap-2">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span data-i18n="btn-analyze">تحليل البيانات</span>
+          </span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ══ RESULTS PANEL — second in DOM → appears on LEFT in RTL (42%) ══ -->
+    <div class="lg:w-[42%] flex flex-col gap-4">
+
+      <!-- Unit Profit Card -->
+      <div class="unit-profit-card" id="unitProfitCard">
+        <div class="flex items-center justify-between mb-4 relative z-10">
+          <div class="bg-white/15 backdrop-blur-sm rounded-xl w-10 h-10 flex items-center justify-center font-black text-white text-lg border border-white/20">$</div>
+          <p class="text-sm font-semibold text-blue-200" data-i18n="res-unit-label">هامش الربح للوحدة</p>
+        </div>
+        <div id="unitProfitValue" class="text-5xl font-black text-white/25 relative z-10 tracking-tight">—</div>
+        <p id="unitProfitNote" class="text-xs text-blue-300 mt-2 relative z-10 hidden" data-i18n="res-unit-note">ربح صافي لكل وحدة مُسلَّمة</p>
+      </div>
+
+      <!-- Margin % + Max CAC Row -->
+      <div class="flex gap-4 results-row">
+        <div class="result-card-sm flex-1">
+          <p class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide" data-i18n="res-maxcac-label">الحد الأقصى للهميل</p>
+          <div class="flex items-end gap-2">
+            <div id="maxCACValue" class="text-2xl font-black text-slate-200">—</div>
+            <div class="bg-blue-100 text-blue-600 rounded-lg w-7 h-7 flex items-center justify-center font-black text-sm mb-0.5">$</div>
+          </div>
+          <p class="text-xs text-slate-400 mt-1.5" data-i18n="res-maxcac-note">أقصى تكلفة مكسب (نقطة التعادل)</p>
+        </div>
+        <div class="result-card-sm flex-1">
+          <p class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide" data-i18n="res-margin-label">هامش الربح %</p>
+          <div class="flex items-end gap-2">
+            <div id="marginPctValue" class="text-2xl font-black text-slate-200">—</div>
+            <svg id="marginArrow" class="w-5 h-5 mb-1 hidden text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          </div>
+          <p class="text-xs text-slate-400 mt-1.5" data-i18n="res-margin-note">نسبة الربح من الإيراد</p>
+        </div>
+      </div>
+
+      <!-- Expected Total Profit -->
+      <div class="result-card-sm">
+        <p class="text-sm font-bold text-slate-600 mb-4" data-i18n="res-total-label">الربح الإجمالي المتوقع</p>
+        <div class="flex items-center gap-3 mb-4">
+          <button class="btn-secondary" onclick="calcTotal()" data-i18n="btn-calc">احسب</button>
+          <div class="input-wrapper flex-1 !py-2 !px-3">
+            <div class="input-inner">
+              <input type="number" id="leadsCount" value="100" min="1" class="text-center" placeholder="100" />
+              <svg class="w-5 h-5 text-blue-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span class="text-xs text-blue-400 whitespace-nowrap font-semibold" data-i18n="leads-label">عميل محتمل</span>
+            </div>
+          </div>
+        </div>
+        <div id="totalProfitBox" class="bg-green-50 border-2 border-dashed border-green-300 rounded-2xl p-5 text-center hidden fade-in">
+          <p id="totalProfitLabel" class="text-xs text-slate-400 mb-1 font-semibold"></p>
+          <div id="totalProfitValue" class="text-4xl font-black text-green-500"></div>
+        </div>
+        <div id="totalProfitPlaceholder" class="bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl p-5 text-center">
+          <svg class="w-8 h-8 text-blue-300 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <p class="text-xs text-blue-400 font-semibold" data-i18n="placeholder-total">أدخل البيانات ثم اضغط تحليل</p>
+        </div>
+      </div>
+
+      <!-- Profit per Lead + Breakeven DR Card -->
+      <div id="insightsCard" class="result-card-sm hidden fade-in">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-1.5 h-5 bg-green-500 rounded-full"></div>
+          <p class="text-sm font-bold text-slate-700" id="insightsTitle"></p>
+        </div>
+        <div id="insightsContent"></div>
+      </div>
+
+      <!-- Cost Breakdown -->
+      <div id="breakdownCard" class="result-card-sm hidden fade-in">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-1.5 h-5 bg-blue-600 rounded-full"></div>
+          <p class="text-sm font-bold text-slate-700">تفاصيل التكاليف لكل عميل محتمل</p>
+        </div>
+        <div id="breakdownContent"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="max-w-5xl mx-auto mt-6 text-center text-xs text-blue-300/60 font-medium pb-4">
+    <span data-i18n="footer">التكاليف مبنية على اتفاقية COD Network · الشحن المحلي مع خدمة مركز الاتصال · جميع الأسعار بالدولار الأمريكي</span>
+  </div>
+
+<script>
+  // ─── Fixed Costs Data ───────────────────────────────────────────────────────
+  const CC_FEES = {
+    cosmetic: { lead: 0.50, confirmation: 2.00, delivery: 3.00 },
+    gadget:   { lead: 0.50, confirmation: 1.00, delivery: 2.00 }
+  };
+
+  const SHIPPING = {
+    UAE: { delivered: 5.99, returned: 4.99 },
+    KSA: { delivered: 4.99, returned: 2.99 },
+    KWT: { delivered: 6.99, returned: 5.99 },
+    QTR: { delivered: 6.99, returned: 5.99 },
+    BHR: { delivered: 6.99, returned: 5.99 },
+    OMN: { delivered: 6.99, returned: 5.99 }
+  };
+
+  const COD_RATE = 0.05;
+
+  let lastProfitPerLead = null;
+  let lastBreakdownData  = null;
+  let currentLang = 'en';
+
+  // ─── Translations ────────────────────────────────────────────────────────
+  const LANGS = {
+    ar: {
+      badge: 'محاسب الأرباح', simulate: 'محاكاة',
+      title: 'حاسبة أرباح COD', subtitle: 'دول الخليج العربي · COD Network',
+      's1-title': 'تفاصيل المنتج',
+      'label-product-type': 'نوع المنتج *', 'label-country': 'الدولة *',
+      's2-title': 'التكاليف والإيرادات',
+      'label-product-cost': 'تكلفة المنتج *', 'label-order-value': 'متوسط قيمة الطلب *',
+      'label-cac': 'تكلفة العميل المحتمل - CPL *',
+      's3-title': 'معدلات الأداء',
+      'label-confirm': 'نسبة التأكيد (%) *', 'label-deliver': 'نسبة التوصيل (%) *',
+      'pill-cod': '💳 COD: 5%', 'pill-storage': '📦 تخزين: مجاني',
+      'btn-analyze': 'تحليل البيانات',
+      'res-unit-label': 'هامش الربح للوحدة', 'res-unit-note': 'ربح صافي لكل وحدة مُسلَّمة',
+      'res-maxcac-label': 'أقصى CPL مقبول', 'res-maxcac-note': 'الحد الأقصى للإنفاق الإعلاني (نقطة التعادل)',
+      'res-margin-label': 'هامش الربح %', 'res-margin-note': 'نسبة الربح من الإيراد',
+      'res-total-label': 'الربح الإجمالي المتوقع',
+      'btn-calc': 'احسب', 'leads-label': 'عميل محتمل',
+      'placeholder-total': 'أدخل البيانات ثم اضغط تحليل',
+      footer: 'التكاليف مبنية على اتفاقية COD Network · الشحن المحلي مع خدمة مركز الاتصال · جميع الأسعار بالدولار الأمريكي',
+      'lang-btn': 'EN',
+      'for-leads': n => `لـ ${n} عميل محتمل`,
+      'breakdown-title': x => `تفاصيل التكاليف لـ ${x} عميل محتمل`,
+      'row-lead': '🏷️ تكلفة الطلب (Lead Fee)',
+      'row-confirm': '✅ رسوم التأكيد (Call Center)',
+      'row-deliver': '🚚 رسوم التوصيل (Call Center)',
+      'row-ship-out': '📦 تكلفة الشحن (توصيل)',
+      'row-ship-back': '↩️ تكلفة الشحن (مُرتجع)',
+      'row-product': '🛍️ تكلفة المنتج',
+      'row-cod': '💳 رسوم COD (5%)',
+      'row-cac': '📣 الإنفاق الإعلاني (CPL)',
+      'row-total-cost': 'إجمالي التكاليف',
+      'row-revenue': 'الإيراد المتوقع',
+      'row-per-lead': 'الربح لكل عميل محتمل',
+      'row-net': x => `صافي الربح الإجمالي (${x} عميل)`,
+      'confirmed-leads': 'طلبات مؤكدة',
+      'delivered-leads': 'طلبات موصَّلة',
+      'group-your': 'مصاريفك',
+      'group-cc': 'رسوم COD Network',
+      'insights-title': 'مؤشرات الربحية',
+      'roi-label': 'عائد الاستثمار (ROI)',
+      'roi-note': 'العائد على إجمالي التكاليف',
+      'breakeven-dr': 'نسبة التوصيل عند التعادل',
+      'breakeven-dr-note': 'أدنى نسبة توصيل لتجنب الخسارة',
+      'breakeven-impossible': 'غير ممكن تحقيق التعادل',
+      'pill-lead': v => `🏷️ طلب: $${v}`,
+      'pill-confirm-dyn': v => `✅ تأكيد: $${v}`,
+      'pill-deliver-dyn': v => `🚚 عمولة التوصيل: $${v}`,
+      'pill-shipping-dyn': v => `📦 شحن: $${v}`,
+      'validate-msg': 'الرجاء إدخال قيمة الطلب ونسبتي التأكيد والتوصيل',
+    },
+    en: {
+      badge: 'Profit Calculator', simulate: 'Simulate',
+      title: 'COD Profit Calculator', subtitle: 'Gulf Countries · COD Network',
+      's1-title': 'Product Details',
+      'label-product-type': 'Product Type *', 'label-country': 'Country *',
+      's2-title': 'Costs & Revenue',
+      'label-product-cost': 'Product Cost *', 'label-order-value': 'Avg. Order Value *',
+      'label-cac': 'Cost Per Lead - CPL ($) *',
+      's3-title': 'Performance Rates',
+      'label-confirm': 'Confirmation Rate (%) *', 'label-deliver': 'Delivery Rate (%) *',
+      'pill-cod': '💳 COD: 5%', 'pill-storage': '📦 Storage: Free',
+      'btn-analyze': 'Analyze Data',
+      'res-unit-label': 'Unit Profit Margin', 'res-unit-note': 'Net profit per delivered unit',
+      'res-maxcac-label': 'Max Affordable CPL', 'res-maxcac-note': 'Max cost per lead at breakeven',
+      'res-margin-label': 'Profit Margin %', 'res-margin-note': '% of revenue',
+      'res-total-label': 'Expected Total Profit',
+      'btn-calc': 'Calculate', 'leads-label': 'leads',
+      'placeholder-total': 'Enter data then click Analyze',
+      footer: 'Costs based on COD Network agreement · Domestic shipping with call center · All prices in USD',
+      'lang-btn': 'عربي',
+      'for-leads': n => `for ${n} leads`,
+      'breakdown-title': x => `Cost breakdown for ${x} leads`,
+      'row-lead': '🏷️ Lead Fee',
+      'row-confirm': '✅ Confirmation Fee (Call Center)',
+      'row-deliver': '🚚 Delivery Fee (Call Center)',
+      'row-ship-out': '📦 Shipping Cost (Delivered)',
+      'row-ship-back': '↩️ Shipping Cost (Returned)',
+      'row-product': '🛍️ Product Cost',
+      'row-cod': '💳 COD Fee (5%)',
+      'row-cac': '📣 Ad Spend (CPL)',
+      'row-total-cost': 'Total Costs',
+      'row-revenue': 'Expected Revenue',
+      'row-per-lead': 'Profit per Lead',
+      'row-net': x => `Total Net Profit (${x} leads)`,
+      'confirmed-leads': 'Confirmed Orders',
+      'delivered-leads': 'Delivered Orders',
+      'group-your': 'Your Expenses',
+      'group-cc': 'COD Network Fees',
+      'insights-title': 'Profitability Insights',
+      'roi-label': 'Return on Investment (ROI)',
+      'roi-note': '% return on total cost invested',
+      'breakeven-dr': 'Breakeven Delivery Rate',
+      'breakeven-dr-note': 'Min. delivery rate to avoid a loss',
+      'breakeven-impossible': 'Cannot break even at any delivery rate',
+      'pill-lead': v => `🏷️ Lead: $${v}`,
+      'pill-confirm-dyn': v => `✅ Confirm: $${v}`,
+      'pill-deliver-dyn': v => `🚚 CC Delivery Fee: $${v}`,
+      'pill-shipping-dyn': v => `📦 Shipping: $${v}`,
+      'validate-msg': 'Please enter order value and both confirmation and delivery rates',
+    }
+  };
+
+  // ─── Language Toggle ─────────────────────────────────────────────────────
+  function toggleLang() {
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    const L = LANGS[currentLang];
+    const html = document.documentElement;
+    html.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+    html.setAttribute('lang', currentLang);
+    document.getElementById('langToggleBtn').textContent = L['lang-btn'];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (L[key] && typeof L[key] === 'string') el.textContent = L[key];
+    });
+    if (lastBreakdownData) {
+      const n = parseInt(document.getElementById('leadsCount').value) || 100;
+      renderBreakdown(lastBreakdownData, n);
+      renderInsightsCard(lastBreakdownData);
+    }
+    updateInfoBar();
+  }
+
+  // ─── Update Info Bar on dropdown change ────────────────────────────────────
+  function updateInfoBar() {
+    const type    = document.getElementById('productType').value;
+    const country = document.getElementById('country').value;
+    const cc      = CC_FEES[type];
+    const ship    = SHIPPING[country];
+    const L       = LANGS[currentLang];
+    document.getElementById('infoLead').textContent     = L['pill-lead'](CC_FEES[type].lead.toFixed(2));
+    document.getElementById('infoConfirm').textContent  = L['pill-confirm-dyn'](cc.confirmation.toFixed(2));
+    document.getElementById('infoDeliver').textContent  = L['pill-deliver-dyn'](cc.delivery.toFixed(2));
+    document.getElementById('infoShipping').textContent = L['pill-shipping-dyn'](ship.delivered.toFixed(2));
+  }
+  document.getElementById('productType').addEventListener('change', updateInfoBar);
+  document.getElementById('country').addEventListener('change', updateInfoBar);
+  updateInfoBar();
+
+  // ─── Format helpers ─────────────────────────────────────────────────────────
+  function fmt(n) {
+    return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtSigned(n) {
+    return (n >= 0 ? '+' : '-') + fmt(n);
+  }
+  function fmtPct(n) {
+    const sign = n >= 0 ? '+' : '-';
+    return sign + Math.abs(n).toFixed(2) + '%';
+  }
+
+  // ─── Main Calculate ─────────────────────────────────────────────────────────
+  function calculate() {
+    const country     = document.getElementById('country').value;
+    const type        = document.getElementById('productType').value;
+    const productCost = parseFloat(document.getElementById('productCost').value) || 0;
+    const orderValue  = parseFloat(document.getElementById('orderValue').value) || 0;
+    const cac         = parseFloat(document.getElementById('cac').value) || 0;
+    const confirmPct  = parseFloat(document.getElementById('confirmRate').value) || 0;
+    const deliverPct  = parseFloat(document.getElementById('deliverRate').value) || 0;
+
+    // Validate
+    if (orderValue <= 0 || confirmPct <= 0 || deliverPct <= 0) {
+      alert(LANGS[currentLang]['validate-msg']);
+      return;
+    }
+
+    const cr  = confirmPct / 100;
+    const dr  = deliverPct / 100;
+    const cc  = CC_FEES[type];
+    const sh  = SHIPPING[country];
+
+    // Per-lead revenue
+    const revenue = cr * dr * orderValue;
+
+    // Per-lead costs
+    const leadFee     = cc.lead;
+    const confirmFee  = cr * cc.confirmation;
+    const deliverFee  = cr * dr * cc.delivery;
+    const shipOut     = cr * dr * sh.delivered;
+    const shipBack    = cr * (1 - dr) * sh.returned;
+    const prodCost    = cr * dr * productCost;
+    const codFee      = cr * dr * COD_RATE * orderValue;
+    const totalCost   = leadFee + confirmFee + deliverFee + shipOut + shipBack + prodCost + codFee + cac;
+
+    const profitPerLead = revenue - totalCost;
+    const unitProfit    = profitPerLead / (cr * dr);
+    const marginPct     = revenue > 0 ? (profitPerLead / revenue) * 100 : 0;
+    const roiPct        = totalCost > 0 ? (profitPerLead / totalCost) * 100 : 0;
+    const maxCAC        = cac + profitPerLead;
+
+    lastProfitPerLead = profitPerLead;
+
+    // ── Render Unit Profit ──
+    const unitEl = document.getElementById('unitProfitValue');
+    unitEl.textContent = fmtSigned(unitProfit);
+    unitEl.className   = 'text-5xl font-black fade-in tracking-tight ' + (unitProfit >= 0 ? 'text-white' : 'text-red-300');
+    document.getElementById('unitProfitNote').classList.remove('hidden');
+
+    // ── Render Max CAC ──
+    const cacEl = document.getElementById('maxCACValue');
+    cacEl.textContent = fmt(maxCAC);
+    cacEl.className   = 'text-2xl font-black fade-in ' + (maxCAC >= 0 ? 'text-green-500' : 'text-red-500');
+
+    // ── Render Margin % ──
+    const pctEl = document.getElementById('marginPctValue');
+    pctEl.textContent = fmtPct(marginPct);
+    pctEl.className   = 'text-2xl font-black fade-in ' + (marginPct >= 0 ? 'text-green-500' : 'text-red-500');
+    const arrow = document.getElementById('marginArrow');
+    arrow.classList.remove('hidden');
+    arrow.className = 'w-5 h-5 mb-1 fade-in ' + (marginPct >= 0 ? 'text-green-500' : 'text-red-500 rotate-180');
+
+    // ── Store & render breakdown ──
+    // Breakeven delivery rate: solve profit_per_lead(dr_b) = 0
+    const beDenom = cr * (orderValue * (1 - COD_RATE) - cc.delivery - sh.delivered - productCost + sh.returned);
+    const beNumer = cc.lead + cac + cr * cc.confirmation + cr * sh.returned;
+    const breakevenDR = beDenom > 0 ? Math.min(beNumer / beDenom, 1) : null;
+
+    lastBreakdownData = { leadFee, confirmFee, deliverFee, shipOut, shipBack, prodCost, codFee, cac, totalCost, revenue, profitPerLead, roiPct, cr, dr, breakevenDR };
+    const n0 = parseInt(document.getElementById('leadsCount').value) || 100;
+    renderBreakdown(lastBreakdownData, n0);
+
+    // ── Auto-calc total for current leads count ──
+    calcTotal();
+  }
+
+  // ─── Total Profit Projection ────────────────────────────────────────────────
+  function calcTotal() {
+    if (lastProfitPerLead === null) {
+      document.getElementById('totalProfitPlaceholder').classList.remove('hidden');
+      document.getElementById('totalProfitBox').classList.add('hidden');
+      return;
+    }
+    const n     = parseInt(document.getElementById('leadsCount').value) || 100;
+    const total = lastProfitPerLead * n;
+    if (lastBreakdownData) renderBreakdown(lastBreakdownData, n);
+    const box   = document.getElementById('totalProfitBox');
+    const lbl   = document.getElementById('totalProfitLabel');
+    const val   = document.getElementById('totalProfitValue');
+    lbl.textContent = LANGS[currentLang]['for-leads'](n);
+    val.textContent = fmtSigned(total);
+    val.className   = 'text-4xl font-black ' + (total >= 0 ? 'text-green-500' : 'text-red-500');
+    box.className   = (total >= 0 ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300') + ' border-2 border-dashed rounded-2xl p-5 text-center fade-in';
+    box.classList.remove('hidden');
+    document.getElementById('totalProfitPlaceholder').classList.add('hidden');
+  }
+
+  // ─── Cost Breakdown ──────────────────────────────────────────────────────────
+  function renderBreakdown({ leadFee, confirmFee, deliverFee, shipOut, shipBack, prodCost, codFee, cac, totalCost, revenue, profitPerLead, cr, dr, breakevenDR }, n) {
+    const x = n || 1;
+    const L = LANGS[currentLang];
+    const confirmed  = Math.round(x * cr);
+    const delivered  = Math.round(x * cr * dr);
+    const yourRows = [
+      { label: L['row-cac'],     value: cac * x,      color: 'text-blue-700 font-bold' },
+      { label: L['row-product'], value: prodCost * x, color: 'text-slate-600' },
+    ];
+    const ccRows = [
+      { label: L['row-lead'],      value: leadFee * x,    color: 'text-slate-600' },
+      { label: L['row-confirm'],   value: confirmFee * x, color: 'text-slate-600' },
+      { label: L['row-deliver'],   value: deliverFee * x, color: 'text-slate-600' },
+      { label: L['row-cod'],       value: codFee * x,     color: 'text-slate-600' },
+      { label: L['row-ship-out'],  value: shipOut * x,    color: 'text-slate-600' },
+      { label: L['row-ship-back'], value: shipBack * x,   color: 'text-slate-600' },
+    ];
+    const yourTotal   = yourRows.reduce((s, r) => s + r.value, 0);
+    const ccTotal     = ccRows.reduce((s, r) => s + r.value, 0);
+    const grandTotal  = totalCost * x;
+    const yourPct     = grandTotal > 0 ? (yourTotal / grandTotal * 100).toFixed(1) : '0.0';
+    const ccPct       = grandTotal > 0 ? (ccTotal   / grandTotal * 100).toFixed(1) : '0.0';
+    document.querySelector('#breakdownCard p.text-sm').textContent = LANGS[currentLang]['breakdown-title'](x);
+    let html = `
+    <div class="grid grid-cols-2 gap-2 mb-4 breakdown-stats-grid">
+      <div class="rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200 p-3 text-center">
+        <div class="text-2xl font-black text-emerald-600">${confirmed}</div>
+        <div class="text-xs font-semibold text-emerald-500 mt-0.5">${L['confirmed-leads']}</div>
+        <div class="text-[10px] text-emerald-400 mt-0.5">✅ ${(cr*100).toFixed(0)}%</div>
+      </div>
+      <div class="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 p-3 text-center">
+        <div class="text-2xl font-black text-blue-600">${delivered}</div>
+        <div class="text-xs font-semibold text-blue-500 mt-0.5">${L['delivered-leads']}</div>
+        <div class="text-[10px] text-blue-400 mt-0.5">🚚 ${(cr*dr*100).toFixed(0)}%</div>
+      </div>
+    </div>
+    <div class="w-full bg-slate-100 rounded-full h-2 mb-4 overflow-hidden">
+      <div class="h-2 rounded-full bg-gradient-to-r from-emerald-400 to-blue-500" style="width:${(cr*dr*100).toFixed(1)}%"></div>
+    </div>
+    <div class="breakdown-row font-black text-base" style="background:#F0FDF4;border-radius:10px;padding:8px 12px;margin-bottom:12px;border:1.5px solid #BBF7D0;">
+      <span class="text-green-700">${L['row-revenue']}</span>
+      <span class="text-green-600 text-lg">${fmt(revenue * x)}</span>
+    </div>
+
+    <div class="breakdown-group breakdown-group-your">
+      <div class="breakdown-group-header">
+        <span class="text-[11px] font-black uppercase tracking-widest text-orange-500">💸 ${L['group-your']}</span>
+        <span class="text-xs font-black text-orange-600 bg-orange-100 rounded-lg px-2.5 py-1">${fmt(yourTotal)} <span style="opacity:0.65;font-weight:700;">(${yourPct}%)</span></span>
+      </div>`;
+    yourRows.forEach(r => {
+      html += `<div class="breakdown-row">
+        <span class="text-sm ${r.color}">${r.label}</span>
+        <span class="font-bold text-orange-600">${fmt(r.value)}</span>
+      </div>`;
+    });
+    html += `</div>
+
+    <div class="breakdown-group breakdown-group-cc">
+      <div class="breakdown-group-header">
+        <span class="text-[11px] font-black uppercase tracking-widest text-blue-500">🏢 ${L['group-cc']}</span>
+        <span class="text-xs font-black text-blue-700 bg-blue-100 rounded-lg px-2.5 py-1">${fmt(ccTotal)} <span style="opacity:0.65;font-weight:700;">(${ccPct}%)</span></span>
+      </div>`;
+    ccRows.forEach(r => {
+      html += `<div class="breakdown-row">
+        <span class="text-sm ${r.color}">${r.label}</span>
+        <span class="font-bold text-blue-600">${fmt(r.value)}</span>
+      </div>`;
+    });
+    html += `</div>`;
+    html += `<div class="breakdown-row font-black" style="background:#FEF2F2;border-radius:10px;padding:9px 12px;margin-top:4px;border:1.5px solid #FECACA;">
+      <span class="text-red-700 text-sm font-black">${L['row-total-cost']}</span>
+      <span class="text-red-500 text-base font-black">${fmt(totalCost * x)}</span>
+    </div>`;
+    html += `<div class="breakdown-row font-black" style="background:${profitPerLead * x >= 0 ? 'linear-gradient(135deg,#DCFCE7,#BBF7D0)' : 'linear-gradient(135deg,#FEE2E2,#FECACA)'};border-radius:12px;padding:10px 14px;margin-top:4px;border:2px solid ${profitPerLead * x >= 0 ? '#86EFAC' : '#FCA5A5'};">
+      <span class="text-base ${profitPerLead * x >= 0 ? 'text-green-800' : 'text-red-700'}">${L['row-net'](x)}</span>
+      <span class="text-xl ${profitPerLead * x >= 0 ? 'text-green-600' : 'text-red-500'}">${fmtSigned(profitPerLead * x)}</span>
+    </div>`;
+
+    renderInsightsCard({ profitPerLead, roiPct: lastBreakdownData.roiPct, breakevenDR, cr, dr });
+    document.getElementById('breakdownContent').innerHTML = html;
+    document.getElementById('breakdownCard').classList.remove('hidden');
+  }
+
+  // ─── Insights Card (Profit/Lead + Breakeven DR) ──────────────────────────────
+  function renderInsightsCard({ profitPerLead, roiPct, breakevenDR, cr, dr }) {
+    const L       = LANGS[currentLang];
+    const bePct   = breakevenDR !== null && breakevenDR <= 1 ? (breakevenDR * 100).toFixed(1) : null;
+    const aboveBE = bePct !== null ? dr >= breakevenDR : false;
+    const beColor  = aboveBE ? '#16A34A' : '#EA580C';
+    const beBg     = aboveBE ? '#F0FDF4' : '#FFF7ED';
+    const beBorder = aboveBE ? '#86EFAC' : '#FED7AA';
+    const beStatus = bePct !== null
+      ? (aboveBE ? `✅ ${(dr*100).toFixed(0)}% > ${bePct}%` : `⚠️ ${(dr*100).toFixed(0)}% < ${bePct}%`)
+      : `⚠️ ${L['breakeven-impossible']}`;
+    const pc = profitPerLead >= 0 ? '#16A34A' : '#DC2626';
+    const pb = profitPerLead >= 0 ? '#F0FDF4' : '#FEF2F2';
+    const pbo= profitPerLead >= 0 ? '#86EFAC' : '#FECACA';
+
+    document.getElementById('insightsTitle').textContent = L['insights-title'];
+    const roiColor  = roiPct >= 0 ? '#16A34A' : '#DC2626';
+    const roiBg     = roiPct >= 0 ? '#F0FDF4' : '#FEF2F2';
+    const roiBorder = roiPct >= 0 ? '#86EFAC' : '#FECACA';
+    document.getElementById('insightsContent').innerHTML = `
+      <div class="insights-inner-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:${pb};border:2px solid ${pbo};border-radius:14px;padding:14px 16px;">
+          <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;color:${pc};opacity:0.75;margin-bottom:6px;">${L['row-per-lead']}</div>
+          <div style="font-size:26px;font-weight:900;color:${pc};line-height:1;">${fmtSigned(profitPerLead)}</div>
+          <div style="font-size:10px;color:${pc};opacity:0.55;margin-top:4px;">per lead</div>
+        </div>
+        <div style="background:${bePct !== null ? beBg : '#FEF2F2'};border:2px solid ${bePct !== null ? beBorder : '#FECACA'};border-radius:14px;padding:14px 16px;">
+          <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;color:${bePct !== null ? beColor : '#DC2626'};opacity:0.75;margin-bottom:6px;">${L['breakeven-dr']}</div>
+          <div style="font-size:26px;font-weight:900;color:${bePct !== null ? beColor : '#DC2626'};line-height:1;">${bePct !== null ? bePct + '%' : 'N/A'}</div>
+          <div style="font-size:10px;font-weight:700;color:${bePct !== null ? beColor : '#DC2626'};margin-top:4px;">${beStatus}</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;background:${roiBg};border:2px solid ${roiBorder};border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;color:${roiColor};opacity:0.75;margin-bottom:4px;">${L['roi-label']}</div>
+          <div style="font-size:11px;color:${roiColor};opacity:0.6;">${L['roi-note']}</div>
+        </div>
+        <div style="font-size:28px;font-weight:900;color:${roiColor};line-height:1;">${fmtPct(roiPct)}</div>
+      </div>`;
+    document.getElementById('insightsCard').classList.remove('hidden');
+  }
+
+  // ─── Apply default language on load ─────────────────────────────────────────
+  (function() {
+    const L = LANGS[currentLang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (L[key] && typeof L[key] === 'string') el.textContent = L[key];
+    });
+  })();
+
+  // ─── Allow Enter key to trigger calculate ───────────────────────────────────
+  document.querySelectorAll('input[type="number"]').forEach(el => {
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+  });
+</script>
+</body>
+</html>
