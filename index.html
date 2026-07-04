@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>حاسبة أرباح COD - الخليج</title>
+  <link rel="icon" type="image/jpeg" href="gemini-svg.jpg" />
+  <link rel="apple-touch-icon" href="gemini-svg.jpg" />
+  <meta property="og:image" content="gemini-svg.jpg" />
+  <meta property="og:title" content="حاسبة أرباح COD - الخليج" />
+  <meta property="og:type" content="website" />
   <style>
     /* ── Minimal utility CSS (replaces Tailwind CDN ~3MB → ~5KB) ── */
     *,*::before,*::after{box-sizing:border-box}
@@ -340,13 +345,25 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(37,99,235,0.3); border-radius: 3px; }
+
+    /* ── Mobile Responsive ──────────────────────────────────────────────────── */
+    @media(max-width:639px){
+      .glass-card,.result-card-sm,.unit-profit-card{padding:16px;}
+      .header-wrapper{flex-direction:column;align-items:stretch;gap:.625rem;}
+      .inputs-grid{grid-template-columns:1fr!important;}
+      .results-row{flex-direction:column;}
+      #unitProfitValue{font-size:2rem!important;}
+      .insights-inner-grid{grid-template-columns:1fr!important;}
+      .breakdown-stats-grid{grid-template-columns:1fr!important;}
+      select,input[type="number"]{font-size:16px!important;}
+    }
   </style>
 </head>
 <body class="min-h-screen py-8 px-4">
 
   <!-- Header -->
   <div class="max-w-5xl mx-auto mb-7">
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between header-wrapper">
       <div class="flex items-center gap-3">
         <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-2xl px-5 py-2.5 flex items-center gap-2 text-sm font-bold shadow-lg shadow-blue-900/40">
           <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -374,12 +391,12 @@
             <span class="section-number">١</span>
             <h2 class="text-base font-bold text-slate-700" data-i18n="s1-title">تفاصيل المنتج</h2>
           </div>
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-3 inputs-grid">
 
             <div class="input-wrapper">
               <span class="input-label" data-i18n="label-product-type">نوع المنتج *</span>
               <div class="input-inner">
-                <select id="productType" style="font-family:'Cairo',sans-serif;font-size:15px;color:#1e3a8a;font-weight:700;background:transparent;border:none;outline:none;width:100%;">
+                <select id="productType" style="font-family:'Cairo',sans-serif;font-size:16px;color:#1e3a8a;font-weight:700;background:transparent;border:none;outline:none;width:100%;">
                   <option value="cosmetic">Cosmetics</option>
                   <option value="gadget">Gadget</option>
                 </select>
@@ -392,7 +409,7 @@
             <div class="input-wrapper">
               <span class="input-label" data-i18n="label-country">الدولة *</span>
               <div class="input-inner">
-                <select id="country" style="font-family:'Cairo',sans-serif;font-size:15px;color:#1e3a8a;font-weight:700;background:transparent;border:none;outline:none;width:100%;">
+                <select id="country" style="font-family:'Cairo',sans-serif;font-size:16px;color:#1e3a8a;font-weight:700;background:transparent;border:none;outline:none;width:100%;">
                   <option value="KWT">🇰🇼 الكويت - KWT</option>
                   <option value="UAE">🇦🇪 الإمارات - UAE</option>
                   <option value="KSA">🇸🇦 السعودية - KSA</option>
@@ -417,7 +434,7 @@
             <span class="section-number">٢</span>
             <h2 class="text-base font-bold text-slate-700" data-i18n="s2-title">التكاليف والإيرادات</h2>
           </div>
-          <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="grid grid-cols-2 gap-3 mb-3 inputs-grid">
 
             <div class="input-wrapper">
               <span class="input-label" data-i18n="label-product-cost">تكلفة المنتج *</span>
@@ -458,7 +475,7 @@
             <span class="section-number">٣</span>
             <h2 class="text-base font-bold text-slate-700" data-i18n="s3-title">معدلات الأداء</h2>
           </div>
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-3 inputs-grid">
 
             <div class="input-wrapper">
               <span class="input-label" data-i18n="label-confirm">نسبة التأكيد (%) *</span>
@@ -520,7 +537,7 @@
       </div>
 
       <!-- Margin % + Max CAC Row -->
-      <div class="flex gap-4">
+      <div class="flex gap-4 results-row">
         <div class="result-card-sm flex-1">
           <p class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide" data-i18n="res-maxcac-label">الحد الأقصى للهميل</p>
           <div class="flex items-end gap-2">
@@ -884,7 +901,7 @@
     const ccPct       = grandTotal > 0 ? (ccTotal   / grandTotal * 100).toFixed(1) : '0.0';
     document.querySelector('#breakdownCard p.text-sm').textContent = LANGS[currentLang]['breakdown-title'](x);
     let html = `
-    <div class="grid grid-cols-2 gap-2 mb-4">
+    <div class="grid grid-cols-2 gap-2 mb-4 breakdown-stats-grid">
       <div class="rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200 p-3 text-center">
         <div class="text-2xl font-black text-emerald-600">${confirmed}</div>
         <div class="text-xs font-semibold text-emerald-500 mt-0.5">${L['confirmed-leads']}</div>
@@ -963,7 +980,7 @@
     const roiBg     = roiPct >= 0 ? '#F0FDF4' : '#FEF2F2';
     const roiBorder = roiPct >= 0 ? '#86EFAC' : '#FECACA';
     document.getElementById('insightsContent').innerHTML = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="insights-inner-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div style="background:${pb};border:2px solid ${pbo};border-radius:14px;padding:14px 16px;">
           <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;color:${pc};opacity:0.75;margin-bottom:6px;">${L['row-per-lead']}</div>
           <div style="font-size:26px;font-weight:900;color:${pc};line-height:1;">${fmtSigned(profitPerLead)}</div>
